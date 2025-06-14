@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Gen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a0a0f; /* Very dark blue/black */
+            --primary-color: #00f2ea; /* Neon Cyan/Teal */
+            --secondary-color: #ff00ff; /* Neon Magenta */
+            --accent-color: #f0f0f0; /* Off-white for text */
+            --panel-bg: rgba(20, 20, 30, 0.8); /* Slightly transparent dark panel */
+            --border-glow: 0 0 5px var(--primary-color), 0 0 10px var(--primary-color), 0 0 15px var(--primary-color);
+            --text-shadow: 0 0 3px var(--primary-color), 0 0 5px var(--secondary-color);
+            --input-bg: rgba(0,0,0,0.5);
+            --success-color: #00ff80; /* Neon Green */
+            --warning-color: #ffdd00; /* Neon Yellow */
+            --error-color: #ff3333; /* Neon Red */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: var(--bg-color);
+            color: var(--accent-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden; /* Prevent horizontal scroll from glows */
+            background-image:
+                linear-gradient(rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.8) 100%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%230f0f1a' fill-opacity='0.4'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .container {
+            background: var(--panel-bg);
+            border: 1px solid var(--primary-color);
+            box-shadow: var(--border-glow), 0 0 30px rgba(0,0,0,0.5) inset;
+            padding: 30px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 700px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); /* Safari */
+            position: relative; /* For pseudo-elements */
+            overflow: hidden; /* Clip scanlines */
+        }
+
+        /* Scanline effect */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 2px,
+                rgba(0, 242, 234, 0.05) 3px, /* primary-color with low alpha */
+                rgba(0, 242, 234, 0.05) 4px
+            );
+            pointer-events: none;
+            animation: scanline 20s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes scanline {
+            0% { background-position-y: 0; }
+            100% { background-position-y: 400px; }
+        }
+
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary-color);
+            text-shadow: var(--text-shadow);
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            letter-spacing: 2px;
+            animation: flicker 3s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                text-shadow:
+                    0 0 2px #fff,
+                    0 0 5px #fff,
+                    0 0 7px #fff,
+                    0 0 10px var(--primary-color),
+                    0 0 17px var(--primary-color),
+                    0 0 20px var(--primary-color),
+                    0 0 25px var(--primary-color),
+                    0 0 30px var(--primary-color);
+                opacity: 1;
+            }
+            20%, 24%, 55% {
+                text-shadow: none;
+                opacity: 0.8;
+            }
+        }
+
+        .password-display-area {
+            margin-bottom: 30px;
+            position: relative; /* For button positioning */
+        }
+
+        #passwordOutput {
+            width: calc(100% - 50px); /* Account for copy button */
+            padding: 15px;
+            font-size: 1.5em;
+            background: var(--input-bg);
+            border: 1px solid var(--secondary-color);
+            color: var(--accent-color);
+            border-radius: 8px;
+            text-align: center;
+            font-family: 'Roboto Mono', monospace;
+            letter-spacing: 1px;
+            box-shadow: 0 0 8px var(--secondary-color) inset;
+            transition: all 0.3s ease;
+        }
+        #passwordOutput:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 8px var(--primary-color) inset, var(--border-glow);
+        }
+
+        #copyButton {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 45px;
+            background: var(--secondary-color);
+            border: none;
+            color: var(--bg-color);
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #copyButton:hover {
+            background: var(--primary-color);
+            box-shadow: var(--border-glow);
+        }
+        #copyButton:active {
+            transform: scale(0.95);
+        }
+        #copyButton.copied {
+            background: var(--success-color);
+            color: var(--bg-color);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .option-group {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px dashed var(--secondary-color);
+            box-shadow: 0 0 10px rgba(255,0,255,0.2); /* secondary-color with low alpha */
+        }
+        .option-group h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            text-align: left;
+            font-size: 1.1em;
+            border-bottom: 1px solid var(--primary-color);
+            padding-bottom: 5px;
+        }
+
+        .option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+        .option label {
+            margin-right: 10px;
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        /* Custom Checkbox */
+        .option input[type="checkbox"] {
+            display: none; /* Hide original checkbox */
+        }
+        .option input[type="checkbox"] + label span.checkbox-custom {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border: 2px solid var(--secondary-color);
+            border-radius: 4px;
+            position: relative;
+            top: 4px; /* Align with text */
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option input[type="checkbox"]:checked + label span.checkbox-custom {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            box-shadow: var(--border-glow);
+        }
+        .option input[type="checkbox"]:checked + label span.checkbox-custom::after {
+            content: '✔';
+            position: absolute;
+            top: -2px;
+            left: 3px;
+            color: var(--bg-color);
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .option input[type="checkbox"]:focus + label span.checkbox-custom {
+            box-shadow: 0 0 0 2px var(--bg-color), 0 0 0 4px var(--primary-color);
+        }
+
+
+        /* Range Slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100px;
+            height: 10px;
+            background: var(--input-bg);
+            border: 1px solid var(--secondary-color);
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            border: 2px solid var(--bg-color);
+            box-shadow: var(--border-glow);
+            cursor: pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            border: 2px solid var(--bg-color);
+            box-shadow: var(--border-glow);
+            cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 10px;
+            background: var(--input-bg);
+            border-radius: 5px;
+        }
+        input[type="range"]::-moz-range-track {
+            height: 10px;
+            background: var(--input-bg);
+            border-radius: 5px;
+        }
+        .option output {
+            color: var(--primary-color);
+            font-weight: bold;
+            min-width: 25px; /* Ensure space for 2 digits */
+            text-align: right;
+        }
+
+        #generateButton {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: var(--bg-color);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-family: 'Orbitron', sans-serif;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px; /* Spacing from options */
+            box-shadow: 0 0 10px var(--primary-color), 0 0 10px var(--secondary-color);
+        }
+        #generateButton:hover {
+            box-shadow: 0 0 15px var(--primary-color), 0 0 15px var(--secondary-color), 0 0 25px var(--primary-color);
+            transform: translateY(-2px);
+        }
+        #generateButton:active {
+            transform: translateY(0px) scale(0.98);
+            box-shadow: 0 0 5px var(--primary-color), 0 0 5px var(--secondary-color);
+        }
+
+        .strength-indicator {
+            margin-top: 20px;
+            height: 25px;
+            border: 1px solid var(--accent-color);
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+            background: var(--input-bg);
+        }
+        .strength-bar {
+            height: 100%;
+            width: 0%; /* JS will set this */
+            background: var(--error-color); /* Default to weak */
+            transition: width 0.5s ease, background-color 0.5s ease;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+        .strength-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--bg-color);
+            font-weight: bold;
+            font-size: 0.9em;
+            mix-blend-mode: difference; /* Cool effect with bar */
+            filter: invert(1) grayscale(1) contrast(100); /* makes text visible on any bar color */
+            z-index: 2;
+        }
+
+        /* Custom scrollbar (for webkit browsers) */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 5px;
+            box-shadow: var(--border-glow);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Footer for flair */
+        footer {
+            margin-top: 40px;
+            font-size: 0.8em;
+            color: var(--secondary-color);
+            opacity: 0.7;
+            text-shadow: 0 0 3px var(--secondary-color);
+        }
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            #passwordOutput { font-size: 1.2em; width: calc(100% - 45px); }
+            .options-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8em; }
+            #passwordOutput { font-size: 1em; }
+            #generateButton { font-size: 1em; padding: 12px 24px; }
+            .option { flex-direction: column; align-items: flex-start; }
+            .option label { margin-bottom: 8px; }
+            .option input[type="range"] { width: 100%; }
+            .option output { margin-left: 0; margin-top: 5px; align-self: flex-start; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Secure Gen</h1>
+
+        <div class="password-display-area">
+            <input type="text" id="passwordOutput" placeholder="[ Your_Secure_Key_Here ]" readonly>
+            <button id="copyButton" title="Copy to Clipboard">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="options-grid">
+            <div class="option-group">
+                <h3>Core Parameters</h3>
+                <div class="option">
+                    <label for="length">Password Length:</label>
+                    <div>
+                        <input type="range" id="length" min="8" max="128" value="16">
+                        <output for="length" id="lengthValue">16</output>
+                    </div>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="uppercase" checked>
+                    <label for="uppercase"><span class="checkbox-custom"></span>Include Uppercase (A-Z)</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="lowercase" checked>
+                    <label for="lowercase"><span class="checkbox-custom"></span>Include Lowercase (a-z)</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="numbers" checked>
+                    <label for="numbers"><span class="checkbox-custom"></span>Include Numbers (0-9)</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="symbols" checked>
+                    <label for="symbols"><span class="checkbox-custom"></span>Include Symbols (!@#$%^&*)</label>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <h3>Advanced Configuration</h3>
+                <div class="option">
+                    <input type="checkbox" id="excludeSimilar">
+                    <label for="excludeSimilar"><span class="checkbox-custom"></span>Exclude Similar (I, l, 1, O, 0)</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="excludeAmbiguous">
+                    <label for="excludeAmbiguous"><span class="checkbox-custom"></span>Exclude Ambiguous ({ } [ ] ( ) / \ ' " ` ~ , ; . < >)</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="requireEach" checked>
+                    <label for="requireEach"><span class="checkbox-custom"></span>Require At Least One of Each Selected Character Type</label>
+                </div>
+                <div class="option">
+                    <label for="numPasswords">Generate Count:</label>
+                    <div>
+                        <input type="range" id="numPasswords" min="1" max="10" value="1">
+                        <output for="numPasswords" id="numPasswordsValue">1</output>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button id="generateButton">Generate // Secure Key</button>
+
+        <div class="strength-indicator">
+            <div class="strength-bar" id="strengthBar"></div>
+            <span class="strength-text" id="strengthText">Strength</span>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 - Present // Powerz // <a href="https://powerz.vercel.app" target="_blank" rel="noopener noreferrer">My Portfolio</a></p>
+    </footer>
+
+    <script>
+        const passwordOutput = document.getElementById('passwordOutput');
+        const copyButton = document.getElementById('copyButton');
+        const lengthSlider = document.getElementById('length');
+        const lengthValue = document.getElementById('lengthValue');
+        const numPasswordsSlider = document.getElementById('numPasswords');
+        const numPasswordsValue = document.getElementById('numPasswordsValue');
+        const uppercaseCheck = document.getElementById('uppercase');
+        const lowercaseCheck = document.getElementById('lowercase');
+        const numbersCheck = document.getElementById('numbers');
+        const symbolsCheck = document.getElementById('symbols');
+        const excludeSimilarCheck = document.getElementById('excludeSimilar');
+        const excludeAmbiguousCheck = document.getElementById('excludeAmbiguous');
+        const requireEachCheck = document.getElementById('requireEach');
+        const generateButton = document.getElementById('generateButton');
+        const strengthBar = document.getElementById('strengthBar');
+        const strengthText = document.getElementById('strengthText');
+
+        const charSets = {
+            uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            lowercase: 'abcdefghijklmnopqrstuvwxyz',
+            numbers: '0123456789',
+            symbols: '!@#$%^&*()_+-=[]{}|;:,.<>/?'
+        };
+
+        const similarChars = /[Il1O0]/g;
+        const ambiguousChars = /[\[\]\{\}\(\)\/\'\"\`\~\,\;\.\<\>\\\\]/g; // Escaped \
+
+        lengthSlider.addEventListener('input', (e) => {
+            lengthValue.textContent = e.target.value;
+        });
+        numPasswordsSlider.addEventListener('input', (e) => {
+            numPasswordsValue.textContent = e.target.value;
+        });
+
+        copyButton.addEventListener('click', () => {
+            if (!passwordOutput.value) return;
+            navigator.clipboard.writeText(passwordOutput.value).then(() => {
+                const originalIcon = copyButton.innerHTML;
+                copyButton.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022z"/>
+                    </svg>`;
+                copyButton.classList.add('copied');
+                setTimeout(() => {
+                    copyButton.innerHTML = originalIcon;
+                    copyButton.classList.remove('copied');
+                }, 1500);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('Failed to copy password.');
+            });
+        });
+
+        generateButton.addEventListener('click', generatePasswords);
+
+        function generatePasswords() {
+            const numToGenerate = parseInt(numPasswordsValue.textContent);
+            let passwords = [];
+            for (let i = 0; i < numToGenerate; i++) {
+                passwords.push(createSinglePassword());
+            }
+            passwordOutput.value = passwords.join('\n'); // Display multiple passwords separated by newlines
+            if (passwords.length > 0) {
+                updateStrength(passwords[0]); // Update strength based on the first generated password
+            } else {
+                updateStrength("");
+            }
+        }
+
+        function createSinglePassword() {
+            const length = parseInt(lengthValue.textContent);
+            let activeCharSet = '';
+            let guaranteedChars = [];
+
+            let tempUppercase = charSets.uppercase;
+            let tempLowercase = charSets.lowercase;
+            let tempNumbers = charSets.numbers;
+            let tempSymbols = charSets.symbols;
+
+            if (excludeSimilarCheck.checked) {
+                tempUppercase = tempUppercase.replace(similarChars, '');
+                tempLowercase = tempLowercase.replace(similarChars, '');
+                tempNumbers = tempNumbers.replace(similarChars, '');
+                // Symbols usually don't have "similar" issues like l/1/I
+            }
+            if (excludeAmbiguousCheck.checked) {
+                tempSymbols = tempSymbols.replace(ambiguousChars, '');
+            }
+
+            if (uppercaseCheck.checked) {
+                activeCharSet += tempUppercase;
+                if (requireEachCheck.checked && tempUppercase.length > 0) guaranteedChars.push(tempUppercase[Math.floor(Math.random() * tempUppercase.length)]);
+            }
+            if (lowercaseCheck.checked) {
+                activeCharSet += tempLowercase;
+                if (requireEachCheck.checked && tempLowercase.length > 0) guaranteedChars.push(tempLowercase[Math.floor(Math.random() * tempLowercase.length)]);
+            }
+            if (numbersCheck.checked) {
+                activeCharSet += tempNumbers;
+                if (requireEachCheck.checked && tempNumbers.length > 0) guaranteedChars.push(tempNumbers[Math.floor(Math.random() * tempNumbers.length)]);
+            }
+            if (symbolsCheck.checked) {
+                activeCharSet += tempSymbols;
+                if (requireEachCheck.checked && tempSymbols.length > 0) guaranteedChars.push(tempSymbols[Math.floor(Math.random() * tempSymbols.length)]);
+            }
+
+            if (activeCharSet.length === 0) {
+                passwordOutput.value = "Select char types!";
+                updateStrength("");
+                return ""; // Return empty if no char types selected
+            }
+            
+            if (requireEachCheck.checked && guaranteedChars.length > length) {
+                passwordOutput.value = "Length too short for all required types!";
+                updateStrength("");
+                return "";
+            }
+
+
+            let passwordArray = [...guaranteedChars];
+            const remainingLength = length - passwordArray.length;
+
+            for (let i = 0; i < remainingLength; i++) {
+                const randomIndex = Math.floor(Math.random() * activeCharSet.length);
+                passwordArray.push(activeCharSet[randomIndex]);
+            }
+
+            // Shuffle the array to ensure guaranteed characters are not always at the beginning
+            for (let i = passwordArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [passwordArray[i], passwordArray[j]] = [passwordArray[j], passwordArray[i]];
+            }
+            
+            return passwordArray.join('');
+        }
+
+        function updateStrength(password) {
+            let score = 0;
+            if (!password) {
+                strengthBar.style.width = '0%';
+                strengthBar.style.backgroundColor = 'var(--error-color)';
+                strengthText.textContent = 'Strength';
+                return;
+            }
+
+            if (password.length >= 8) score++;
+            if (password.length >= 12) score++;
+            if (password.length >= 16) score++;
+
+            let typesCount = 0;
+            if (uppercaseCheck.checked && /[A-Z]/.test(password)) typesCount++;
+            if (lowercaseCheck.checked && /[a-z]/.test(password)) typesCount++;
+            if (numbersCheck.checked && /[0-9]/.test(password)) typesCount++;
+            if (symbolsCheck.checked && /[\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\|\;\:\,\.\<\>\/\?]/.test(password)) typesCount++;
+            
+            if (typesCount >= 2) score++;
+            if (typesCount >= 3) score++;
+            if (typesCount >= 4) score++;
+
+            // Max score = 6
+            let percentage = (score / 6) * 100;
+            strengthBar.style.width = `${percentage}%`;
+
+            if (score <= 2) {
+                strengthBar.style.backgroundColor = 'var(--error-color)';
+                strengthText.textContent = 'Weak';
+            } else if (score <= 4) {
+                strengthBar.style.backgroundColor = 'var(--warning-color)';
+                strengthText.textContent = 'Medium';
+            } else {
+                strengthBar.style.backgroundColor = 'var(--success-color)';
+                strengthText.textContent = 'Strong!';
+            }
+        }
+        
+        // Initial call to set default length value display and generate a first password
+        lengthValue.textContent = lengthSlider.value;
+        numPasswordsValue.textContent = numPasswordsSlider.value;
+        generatePasswords();
+
+    </script>
+</body>
+</html>
